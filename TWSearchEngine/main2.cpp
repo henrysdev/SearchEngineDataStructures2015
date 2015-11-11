@@ -10,3 +10,6 @@ int main(int argc, char* argv[])
     docParser->ReadInXML(filename);
     return 0;
 }
+
+
+
