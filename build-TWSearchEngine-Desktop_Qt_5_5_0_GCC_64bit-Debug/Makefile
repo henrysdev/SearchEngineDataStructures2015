@@ -48,8 +48,12 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = ../TWSearchEngine/main.cpp 
-OBJECTS       = main.o
+SOURCES       = ../TWSearchEngine/main.cpp \
+		../TWSearchEngine/documentparser.cpp \
+		../TWSearchEngine/avl_tree.cpp 
+OBJECTS       = main.o \
+		documentparser.o \
+		avl_tree.o
 DIST          = ../../../Qt/5.5/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../Qt/5.5/gcc_64/mkspecs/common/unix.conf \
 		../../../Qt/5.5/gcc_64/mkspecs/common/linux.conf \
@@ -148,7 +152,14 @@ DIST          = ../../../Qt/5.5/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../Qt/5.5/gcc_64/mkspecs/features/exceptions.prf \
 		../../../Qt/5.5/gcc_64/mkspecs/features/yacc.prf \
 		../../../Qt/5.5/gcc_64/mkspecs/features/lex.prf \
-		../TWSearchEngine/TWSearchEngine.pro  ../TWSearchEngine/main.cpp
+		../TWSearchEngine/TWSearchEngine.pro documentparser.h \
+		rapidxml.hpp \
+		rapidxml_utils.hpp \
+		rapidxml_print.hpp \
+		rapidxml_iterators.hpp \
+		avl_tree.h ../TWSearchEngine/main.cpp \
+		../TWSearchEngine/documentparser.cpp \
+		../TWSearchEngine/avl_tree.cpp
 QMAKE_TARGET  = TWSearchEngine
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = TWSearchEngine
@@ -418,8 +429,17 @@ compiler_clean:
 
 ####### Compile
 
-main.o: ../TWSearchEngine/main.cpp 
+main.o: ../TWSearchEngine/main.cpp ../TWSearchEngine/documentparser.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../TWSearchEngine/main.cpp
+
+documentparser.o: ../TWSearchEngine/documentparser.cpp ../TWSearchEngine/documentparser.h \
+		../TWSearchEngine/rapidxml_print.hpp \
+		../TWSearchEngine/rapidxml.hpp \
+		../TWSearchEngine/rapidxml_utils.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o documentparser.o ../TWSearchEngine/documentparser.cpp
+
+avl_tree.o: ../TWSearchEngine/avl_tree.cpp ../TWSearchEngine/avl_tree.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o avl_tree.o ../TWSearchEngine/avl_tree.cpp
 
 ####### Install
 

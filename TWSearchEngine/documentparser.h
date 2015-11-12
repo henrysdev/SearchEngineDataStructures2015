@@ -12,7 +12,7 @@ private:
     std::string xmlName;
 public:
     DocumentParser();
-    void Parse();
+    void Parse(char *line);
     void ReadInXML(char* fileName);
 };
 
