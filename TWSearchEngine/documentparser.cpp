@@ -7,6 +7,7 @@
 #include "rapidxml_utils.hpp"
 #include <string>
 #include <ostream>
+#include <streambuf>
 
 
 //using namespace std;
@@ -21,22 +22,16 @@ void DocumentParser::ReadInXML(char *fileName)
     std::string toStr = std::string(fileName);
     xmlName = toStr;
     xmlStream.open(fileName);
-    char* firstLineTest = new char[100];
-    /*
-    while(xmlStream.good())
-    {
-        xmlStream.getline(firstLineTest,5000);
-        std::cout<<firstLineTest<<std::endl;
-
-    }
-    */
-    Parse(firstLineTest);
+    std::ifstream t(xmlName);
+    std::string str((std::istreambuf_iterator<char>(t)),std::istreambuf_iterator<char>());
+    fullText = str;
+    Parse();
 }
 
-void DocumentParser::Parse(char* line)
+void DocumentParser::Parse()
 {
     int x = 0;
-    rapidxml::file<> xmlFile(xmlName.c_str());
+    rapidxml::file<> xmlFile(fullText.c_str());
     rapidxml::xml_document<> doc;
     //doc.parse<0>(xmlFile.data());
     //rapidxml::xml_node<> * firstNode = doc.first_node();

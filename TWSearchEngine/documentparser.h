@@ -10,9 +10,10 @@ class DocumentParser
 private:
     std::ifstream xmlStream;
     std::string xmlName;
+    std::string fullText;
 public:
     DocumentParser();
-    void Parse(char *line);
+    void Parse();
     void ReadInXML(char* fileName);
 };
 
