@@ -25,11 +25,12 @@ private:
     void doubleWithRightChild(AVL_Node * & k1);
     int height(AVL_Node * t) const;
     int max(int lhs, int rhs);
+    void PrintTree(AVL_Node *&rootNode);
     AVL_Node * root;
 public:
     AVL_Node * getRoot();
     AVL_Tree(): root(NULL){}
-    void PrintTree();
+    void printTree();
     void Insert(const std::string & x, const int ID);
 };
 
