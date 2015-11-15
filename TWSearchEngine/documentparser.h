@@ -4,17 +4,19 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include "stemandstopremoval.h"
 
 class DocumentParser
 {
 private:
     std::ifstream xmlStream;
     std::string xmlName;
-    std::string fullText;
+    StemAndStopRemoval * stemStopRemoval;
 public:
     DocumentParser();
     void Parse();
     void ReadInXML(char* fileName);
+    void ParsePage(std::string text, int pageID);
 };
 
 #endif // DOCUMENTPARSER_H

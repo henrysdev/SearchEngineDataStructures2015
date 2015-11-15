@@ -23,6 +23,7 @@ private:
     void rotateWithRightChild(AVL_Node * & k1);
     void doubleWithLeftChild(AVL_Node * & k3);
     void doubleWithRightChild(AVL_Node * & k1);
+    AVL_Node * getNode(std::string nodeName);
     int height(AVL_Node * t) const;
     int max(int lhs, int rhs);
     void PrintTree(AVL_Node *&rootNode);
@@ -31,6 +32,7 @@ public:
     AVL_Node * getRoot();
     AVL_Tree(): root(NULL){}
     void printTree();
+    AVL_Node * GetNode(std::string nodeName);
     void Insert(const std::string & x, const int ID);
 };
 

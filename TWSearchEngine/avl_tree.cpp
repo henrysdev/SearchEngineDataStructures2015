@@ -13,7 +13,6 @@ AVL_Tree::AVL_Node::AVL_Node(const std::string &theElement, const int id, AVL_No
 
 void AVL_Tree::insert(const std::string & term,const int ID, AVL_Node * & t)
 {
-    //PrintTree();
     if(t == nullptr)
         t = new AVL_Node(term,ID,nullptr,nullptr);
     else if(term.compare(t->element) < 0)
@@ -96,6 +95,35 @@ int AVL_Tree::max(int lhs, int rhs)
 AVL_Tree::AVL_Node *AVL_Tree::getRoot()
 {
     return root;
+}
+
+AVL_Tree::AVL_Node * AVL_Tree::getNode(std::string nodeName)
+{
+    AVL_Tree::AVL_Node * currentNode = root;
+    bool found = false;
+    while(found == false)
+    {
+        if(currentNode == nullptr)
+            return nullptr;
+        if(nodeName.compare(currentNode->element) < 0)
+        {
+            currentNode = currentNode->left;
+        }
+        else if(nodeName.compare(currentNode->element) > 0)
+        {
+            currentNode = currentNode->right;
+        }
+        else if(nodeName.compare(currentNode->element) == 0)
+        {
+            found = true;
+        }
+    }
+    return currentNode;
+}
+
+AVL_Tree::AVL_Node * AVL_Tree::GetNode(std::string nodeName)
+{
+    return getNode(nodeName);
 }
 
 void AVL_Tree::PrintTree(AVL_Tree::AVL_Node *& rootNode)

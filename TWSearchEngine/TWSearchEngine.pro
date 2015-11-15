@@ -5,7 +5,8 @@ CONFIG -= qt
 
 SOURCES += main.cpp \
     documentparser.cpp \
-    avl_tree.cpp
+    avl_tree.cpp \
+    stemandstopremoval.cpp
 
 HEADERS += \
     documentparser.h \
@@ -13,5 +14,6 @@ HEADERS += \
     rapidxml_utils.hpp \
     rapidxml_print.hpp \
     rapidxml_iterators.hpp \
-    avl_tree.h
+    avl_tree.h \
+    stemandstopremoval.h
 
