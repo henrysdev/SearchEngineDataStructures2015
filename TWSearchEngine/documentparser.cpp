@@ -8,6 +8,7 @@
 #include <sstream>
 #include <streambuf>
 #include "stemandstopremoval.h"
+#include "index.h"
 
 //using namespace std;
 
@@ -15,6 +16,7 @@ DocumentParser::DocumentParser()
 {
     xmlName = "";
     stemStopRemoval = new StemAndStopRemoval();
+    index = new Index();
 }
 
 void DocumentParser::ReadInXML(char *fileName)
@@ -51,29 +53,23 @@ void DocumentParser::Parse()
             pageID = std::stoi(currentPageNode->first_node("id")->value());
         }
     }
-    std::cout<<"first node: "<<firstNode->first_attribute()->value()<<std::endl;
-    //rapidxml::xml_node<> * firstNode = doc.first_node();
-//    rapidxml::xml_document<> doc;
-//    doc.parse<0>(xmlFile.data());
-//    rapidxml::xml_node<>* root_node = doc.first_node();
-
+    index->getMaster()->printTree();
+    std::cout<<"DONE"<<std::endl;
 }
 
 void DocumentParser::ParsePage(std::string text, int pageID)
 {
-    std::cout<<"------------NEW PAGE--------------------"<<std::endl;
+    //std::cout<<"------------NEW PAGE--------------------"<<std::endl;
     std::istringstream textStream(text);
     std::string buf;
     while(textStream >> buf)
     {
         if(stemStopRemoval->IsStopWord(buf) == false)
         {
-            std::cout<<buf<<std::endl;
-        }
-        else
-        {
-            //std::cout<<buf<<" IS a stop word"<<std::endl;
+            //std::cout<<buf<<std::endl;
+            stemStopRemoval->StemWord(buf);
+            index->getMaster()->Insert(buf,pageID);
         }
     }
-    std::cout<<"----------------------------------------"<<std::endl;
+    //std::cout<<"----------------------------------------"<<std::endl;
 }

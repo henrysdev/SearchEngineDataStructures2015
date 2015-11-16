@@ -11,8 +11,8 @@ private:
     AVL_Tree stop_tree;
 public:
     StemAndStopRemoval();
-    bool IsStopWord(std::string word);
-    void StemWord(std::string word);
+    bool IsStopWord(std::string &word);
+    void StemWord(std::string &word);
 };
 
 #endif // STEMANDSTOPREMOVAL_H

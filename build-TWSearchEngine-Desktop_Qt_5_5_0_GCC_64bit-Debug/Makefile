@@ -51,11 +51,15 @@ OBJECTS_DIR   = ./
 SOURCES       = ../TWSearchEngine/main.cpp \
 		../TWSearchEngine/documentparser.cpp \
 		../TWSearchEngine/avl_tree.cpp \
-		../TWSearchEngine/stemandstopremoval.cpp 
+		../TWSearchEngine/stemandstopremoval.cpp \
+		../TWSearchEngine/index.cpp \
+		../TWSearchEngine/porter2_stemmer.cpp 
 OBJECTS       = main.o \
 		documentparser.o \
 		avl_tree.o \
-		stemandstopremoval.o
+		stemandstopremoval.o \
+		index.o \
+		porter2_stemmer.o
 DIST          = ../../../Qt/5.5/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../Qt/5.5/gcc_64/mkspecs/common/unix.conf \
 		../../../Qt/5.5/gcc_64/mkspecs/common/linux.conf \
@@ -160,10 +164,16 @@ DIST          = ../../../Qt/5.5/gcc_64/mkspecs/features/spec_pre.prf \
 		rapidxml_print.hpp \
 		rapidxml_iterators.hpp \
 		avl_tree.h \
-		stemandstopremoval.h ../TWSearchEngine/main.cpp \
+		stemandstopremoval.h \
+		index.h \
+		porter2_stemmer.h \
+		string_view.h \
+		hash.h ../TWSearchEngine/main.cpp \
 		../TWSearchEngine/documentparser.cpp \
 		../TWSearchEngine/avl_tree.cpp \
-		../TWSearchEngine/stemandstopremoval.cpp
+		../TWSearchEngine/stemandstopremoval.cpp \
+		../TWSearchEngine/index.cpp \
+		../TWSearchEngine/porter2_stemmer.cpp
 QMAKE_TARGET  = TWSearchEngine
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = TWSearchEngine
@@ -434,10 +444,15 @@ compiler_clean:
 ####### Compile
 
 main.o: ../TWSearchEngine/main.cpp ../TWSearchEngine/documentparser.h \
-		../TWSearchEngine/avl_tree.h
+		../TWSearchEngine/avl_tree.h \
+		../TWSearchEngine/stemandstopremoval.h \
+		../TWSearchEngine/index.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../TWSearchEngine/main.cpp
 
 documentparser.o: ../TWSearchEngine/documentparser.cpp ../TWSearchEngine/documentparser.h \
+		../TWSearchEngine/avl_tree.h \
+		../TWSearchEngine/stemandstopremoval.h \
+		../TWSearchEngine/index.h \
 		../TWSearchEngine/rapidxml.hpp \
 		../TWSearchEngine/rapidxml_utils.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o documentparser.o ../TWSearchEngine/documentparser.cpp
@@ -445,8 +460,19 @@ documentparser.o: ../TWSearchEngine/documentparser.cpp ../TWSearchEngine/documen
 avl_tree.o: ../TWSearchEngine/avl_tree.cpp ../TWSearchEngine/avl_tree.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o avl_tree.o ../TWSearchEngine/avl_tree.cpp
 
-stemandstopremoval.o: ../TWSearchEngine/stemandstopremoval.cpp ../TWSearchEngine/stemandstopremoval.h
+stemandstopremoval.o: ../TWSearchEngine/stemandstopremoval.cpp ../TWSearchEngine/stemandstopremoval.h \
+		../TWSearchEngine/avl_tree.h \
+		../TWSearchEngine/porter2_stemmer.h \
+		../TWSearchEngine/string_view.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o stemandstopremoval.o ../TWSearchEngine/stemandstopremoval.cpp
+
+index.o: ../TWSearchEngine/index.cpp ../TWSearchEngine/index.h \
+		../TWSearchEngine/avl_tree.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o index.o ../TWSearchEngine/index.cpp
+
+porter2_stemmer.o: ../TWSearchEngine/porter2_stemmer.cpp ../TWSearchEngine/porter2_stemmer.h \
+		../TWSearchEngine/string_view.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o porter2_stemmer.o ../TWSearchEngine/porter2_stemmer.cpp
 
 ####### Install
 

@@ -39,7 +39,7 @@ void AVL_Tree::insert(const std::string & term,const int ID, AVL_Node * & t)
     }
     else
     {
-        std::cout<<std::endl;
+        t->logCount.push_back(ID);
         //duplicate handling
     }
     t->height = max(height(t->left),height(t->right)) + 1;

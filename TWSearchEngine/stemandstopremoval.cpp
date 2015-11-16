@@ -4,6 +4,7 @@
 #include <istream>
 #include <unordered_map>
 #include <hash_fun.h>
+#include "porter2_stemmer.h"
 
 StemAndStopRemoval::StemAndStopRemoval()
 {
@@ -18,7 +19,7 @@ StemAndStopRemoval::StemAndStopRemoval()
     //stop_tree.printTree();
 }
 
-bool StemAndStopRemoval::IsStopWord(std::string word)
+bool StemAndStopRemoval::IsStopWord(std::string& word)
 {
     if(stop_tree.GetNode(word) == nullptr)
     {
@@ -30,8 +31,11 @@ bool StemAndStopRemoval::IsStopWord(std::string word)
     }
 }
 
-void StemAndStopRemoval::StemWord(std::string word)
+void StemAndStopRemoval::StemWord(std::string& word)
 {
-
+    //std::cout<<"ORIG WORD: "<<word<<" ,";
+    Porter2Stemmer::trim(word);
+    Porter2Stemmer::stem(word);
+    //std::cout<<"STEM WORD: "<<word<<std::endl;
 }
 
