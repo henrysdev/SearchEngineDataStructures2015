@@ -18,9 +18,11 @@ private:
     Index * index;
 public:
     DocumentParser();
+    StemAndStopRemoval * getStemmer();
     void Parse();
     void ReadInXML(char* fileName);
     void ParsePage(std::string text, int pageID);
+    Index * GetIndex();
 };
 
 #endif // DOCUMENTPARSER_H

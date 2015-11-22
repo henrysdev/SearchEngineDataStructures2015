@@ -20,6 +20,6 @@ HEADERS += \
     stemandstopremoval.h \
     index.h \
     porter2_stemmer.h \
-    string_view.h \
-    hash.h
+    hash.h \
+    string_view.h
 

@@ -16,6 +16,7 @@ private:
         AVL_Node * left;
         AVL_Node * right;
         int height;
+        AVL_Node();
         AVL_Node(const std::string & theElement, const int id, AVL_Node * lt, AVL_Node * rt, int h=0);
     };
     void insert(const std::string &term, const int id, AVL_Node * & t);

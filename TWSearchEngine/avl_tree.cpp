@@ -2,6 +2,14 @@
 #include <iostream>
 #include <string>
 
+AVL_Tree::AVL_Node::AVL_Node()
+{
+    element = nullptr;
+    left = nullptr;
+    right = nullptr;
+    height = 0;
+}
+
 AVL_Tree::AVL_Node::AVL_Node(const std::string &theElement, const int id, AVL_Node *lt, AVL_Node *rt, int h)
 {
     element = theElement;

@@ -7,8 +7,8 @@
 class StemAndStopRemoval
 {
 private:
-    std::unordered_map<std::string,int> stop_map;
     AVL_Tree stop_tree;
+    AVL_Tree debug_tree;
 public:
     StemAndStopRemoval();
     bool IsStopWord(std::string &word);

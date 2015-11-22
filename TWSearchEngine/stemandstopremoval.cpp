@@ -33,9 +33,21 @@ bool StemAndStopRemoval::IsStopWord(std::string& word)
 
 void StemAndStopRemoval::StemWord(std::string& word)
 {
-    //std::cout<<"ORIG WORD: "<<word<<" ,";
+    std::string origWord = word;
+    //std::cout<<"ORIG WORD: "<<origWord<<" ,";
+
     Porter2Stemmer::trim(word);
     Porter2Stemmer::stem(word);
-    //std::cout<<"STEM WORD: "<<word<<std::endl;
+
+    //std::cout<<"STEM WORD: "<<word<<" "<<word.length()<<std::endl;
+    /*
+    if(word.length() == 0)
+    {
+        std::ofstream stopWordsFile;
+        stopWordsFile.open("stopwords.txt", std::ios::app);
+        stopWordsFile<<origWord<<std::endl;
+        stop_tree.Insert(origWord,0);
+    }
+    */
 }
 

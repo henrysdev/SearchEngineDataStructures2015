@@ -167,8 +167,8 @@ DIST          = ../../../Qt/5.5/gcc_64/mkspecs/features/spec_pre.prf \
 		stemandstopremoval.h \
 		index.h \
 		porter2_stemmer.h \
-		string_view.h \
-		hash.h ../TWSearchEngine/main.cpp \
+		hash.h \
+		string_view.h ../TWSearchEngine/main.cpp \
 		../TWSearchEngine/documentparser.cpp \
 		../TWSearchEngine/avl_tree.cpp \
 		../TWSearchEngine/stemandstopremoval.cpp \
@@ -462,16 +462,14 @@ avl_tree.o: ../TWSearchEngine/avl_tree.cpp ../TWSearchEngine/avl_tree.h
 
 stemandstopremoval.o: ../TWSearchEngine/stemandstopremoval.cpp ../TWSearchEngine/stemandstopremoval.h \
 		../TWSearchEngine/avl_tree.h \
-		../TWSearchEngine/porter2_stemmer.h \
-		../TWSearchEngine/string_view.h
+		../TWSearchEngine/porter2_stemmer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o stemandstopremoval.o ../TWSearchEngine/stemandstopremoval.cpp
 
 index.o: ../TWSearchEngine/index.cpp ../TWSearchEngine/index.h \
 		../TWSearchEngine/avl_tree.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o index.o ../TWSearchEngine/index.cpp
 
-porter2_stemmer.o: ../TWSearchEngine/porter2_stemmer.cpp ../TWSearchEngine/porter2_stemmer.h \
-		../TWSearchEngine/string_view.h
+porter2_stemmer.o: ../TWSearchEngine/porter2_stemmer.cpp ../TWSearchEngine/porter2_stemmer.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o porter2_stemmer.o ../TWSearchEngine/porter2_stemmer.cpp
 
 ####### Install
