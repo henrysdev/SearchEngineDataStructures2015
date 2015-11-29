@@ -8,7 +8,8 @@ SOURCES += main.cpp \
     avl_tree.cpp \
     stemandstopremoval.cpp \
     index.cpp \
-    porter2_stemmer.cpp
+    porter2_stemmer.cpp \
+    hashtable.cpp
 
 HEADERS += \
     documentparser.h \
@@ -21,5 +22,6 @@ HEADERS += \
     index.h \
     porter2_stemmer.h \
     hash.h \
-    string_view.h
+    string_view.h \
+    hashtable.h
 

@@ -1,5 +1,7 @@
 #include "avl_tree.h"
 #include <iostream>
+#include <vector>
+#include <utility>
 #include <string>
 
 AVL_Tree::AVL_Node::AVL_Node()
@@ -112,7 +114,9 @@ AVL_Tree::AVL_Node * AVL_Tree::getNode(std::string nodeName)
     while(found == false)
     {
         if(currentNode == nullptr)
+        {
             return nullptr;
+        }
         if(nodeName.compare(currentNode->element) < 0)
         {
             currentNode = currentNode->left;
@@ -163,9 +167,38 @@ void AVL_Tree::PrintTree(AVL_Tree::AVL_Node *& rootNode)
         std::cout<<"NODE: "<<rootNode->element<<", NO LEFT: "<<", NO RIGHT: "<<std::endl;
 }
 
+void AVL_Tree::treeToFrequencyVector(AVL_Tree ::AVL_Node *& rootNode)
+{
+    if(rootNode == nullptr)
+        return;
+    else
+    {
+        if(rootNode->left != nullptr)
+        {
+            treeToFrequencyVector(rootNode->left);
+        }
+        if(rootNode->right != nullptr)
+        {
+            treeToFrequencyVector(rootNode->right);
+        }
+    }
+    int freqCount = rootNode->logCount.size();
+    frequencyVector.push_back(std::make_pair(rootNode->element,freqCount));
+}
+
 void AVL_Tree::printTree()
 {
     PrintTree(root);
+}
+
+void AVL_Tree::TreeToFrequencyVector()
+{
+    treeToFrequencyVector(root);
+}
+
+std::vector<std::pair<std::string,int>> * AVL_Tree::GetFreqVector()
+{
+    return &frequencyVector;
 }
 
 

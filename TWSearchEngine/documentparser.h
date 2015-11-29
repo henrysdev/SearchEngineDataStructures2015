@@ -5,16 +5,17 @@
 #include <fstream>
 #include <string>
 #include "avl_tree.h"
+#include "hashtable.h"
 #include "stemandstopremoval.h"
 #include "index.h"
 
 class DocumentParser
 {
 private:
+    int pageCount;
     std::ifstream xmlStream;
     std::string xmlName;
     StemAndStopRemoval * stemStopRemoval;
-    AVL_Tree * masterTree;
     Index * index;
 public:
     DocumentParser();
@@ -23,6 +24,8 @@ public:
     void ReadInXML(char* fileName);
     void ParsePage(std::string text, int pageID);
     Index * GetIndex();
+    std::string retrievePage(int targetID);
+    void renamePageFiles();
 };
 
 #endif // DOCUMENTPARSER_H
