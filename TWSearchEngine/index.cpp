@@ -86,5 +86,3 @@ int Index::getWordCount()
 {
     return totalWordCount;
 }
-
-

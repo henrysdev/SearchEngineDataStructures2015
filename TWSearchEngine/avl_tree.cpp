@@ -200,6 +200,3 @@ std::vector<std::pair<std::string,int>> * AVL_Tree::GetFreqVector()
 {
     return &frequencyVector;
 }
-
-
-

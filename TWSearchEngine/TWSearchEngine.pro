@@ -9,7 +9,9 @@ SOURCES += main.cpp \
     stemandstopremoval.cpp \
     index.cpp \
     porter2_stemmer.cpp \
-    hashtable.cpp
+    hashtable.cpp \
+    queryprocessor.cpp \
+    userinterface.cpp
 
 HEADERS += \
     documentparser.h \
@@ -23,5 +25,7 @@ HEADERS += \
     porter2_stemmer.h \
     hash.h \
     string_view.h \
-    hashtable.h
+    hashtable.h \
+    queryprocessor.h \
+    userinterface.h
 

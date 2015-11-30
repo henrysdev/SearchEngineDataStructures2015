@@ -71,18 +71,18 @@ void DocumentParser::ParsePage(std::string text, int pageID)
         {
             if(stemStopRemoval->IsStopWord(buf) == false)
             {
+                //return;
                 //std::cout<<buf<<std::endl;
                 stemStopRemoval->StemWord(buf);
-                if(stemStopRemoval->IsStopWord(buf) == false)
-                {
                     index->incrementWordCount();
                     if(index->getDataStructureID() == 0)
                         index->getMasterTree()->Insert(buf,pageID);
                     else
                         std::cout<<"hash table fail"<<std::endl;//index->getMasterHash()->createPair(buf,vector<int>);
-                }
             }
         }
+        //else
+        //    return;
     }
     //std::cout<<"----------------------------------------"<<std::endl;
 }

@@ -54,14 +54,18 @@ SOURCES       = ../TWSearchEngine/main.cpp \
 		../TWSearchEngine/stemandstopremoval.cpp \
 		../TWSearchEngine/index.cpp \
 		../TWSearchEngine/porter2_stemmer.cpp \
-		../TWSearchEngine/hashtable.cpp 
+		../TWSearchEngine/hashtable.cpp \
+		../TWSearchEngine/queryprocessor.cpp \
+		../TWSearchEngine/userinterface.cpp 
 OBJECTS       = main.o \
 		documentparser.o \
 		avl_tree.o \
 		stemandstopremoval.o \
 		index.o \
 		porter2_stemmer.o \
-		hashtable.o
+		hashtable.o \
+		queryprocessor.o \
+		userinterface.o
 DIST          = ../../../Qt/5.5/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../Qt/5.5/gcc_64/mkspecs/common/unix.conf \
 		../../../Qt/5.5/gcc_64/mkspecs/common/linux.conf \
@@ -171,13 +175,17 @@ DIST          = ../../../Qt/5.5/gcc_64/mkspecs/features/spec_pre.prf \
 		porter2_stemmer.h \
 		hash.h \
 		string_view.h \
-		hashtable.h ../TWSearchEngine/main.cpp \
+		hashtable.h \
+		queryprocessor.h \
+		userinterface.h ../TWSearchEngine/main.cpp \
 		../TWSearchEngine/documentparser.cpp \
 		../TWSearchEngine/avl_tree.cpp \
 		../TWSearchEngine/stemandstopremoval.cpp \
 		../TWSearchEngine/index.cpp \
 		../TWSearchEngine/porter2_stemmer.cpp \
-		../TWSearchEngine/hashtable.cpp
+		../TWSearchEngine/hashtable.cpp \
+		../TWSearchEngine/queryprocessor.cpp \
+		../TWSearchEngine/userinterface.cpp
 QMAKE_TARGET  = TWSearchEngine
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = TWSearchEngine
@@ -449,6 +457,7 @@ compiler_clean:
 
 main.o: ../TWSearchEngine/main.cpp ../TWSearchEngine/documentparser.h \
 		../TWSearchEngine/avl_tree.h \
+		../TWSearchEngine/hashtable.h \
 		../TWSearchEngine/stemandstopremoval.h \
 		../TWSearchEngine/index.h \
 		../TWSearchEngine/porter2_stemmer.h \
@@ -458,6 +467,7 @@ main.o: ../TWSearchEngine/main.cpp ../TWSearchEngine/documentparser.h \
 
 documentparser.o: ../TWSearchEngine/documentparser.cpp ../TWSearchEngine/documentparser.h \
 		../TWSearchEngine/avl_tree.h \
+		../TWSearchEngine/hashtable.h \
 		../TWSearchEngine/stemandstopremoval.h \
 		../TWSearchEngine/index.h \
 		../TWSearchEngine/rapidxml.hpp \
@@ -475,7 +485,8 @@ stemandstopremoval.o: ../TWSearchEngine/stemandstopremoval.cpp ../TWSearchEngine
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o stemandstopremoval.o ../TWSearchEngine/stemandstopremoval.cpp
 
 index.o: ../TWSearchEngine/index.cpp ../TWSearchEngine/index.h \
-		../TWSearchEngine/avl_tree.h
+		../TWSearchEngine/avl_tree.h \
+		../TWSearchEngine/hashtable.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o index.o ../TWSearchEngine/index.cpp
 
 porter2_stemmer.o: ../TWSearchEngine/porter2_stemmer.cpp ../TWSearchEngine/porter2_stemmer.h \
@@ -485,6 +496,29 @@ porter2_stemmer.o: ../TWSearchEngine/porter2_stemmer.cpp ../TWSearchEngine/porte
 
 hashtable.o: ../TWSearchEngine/hashtable.cpp ../TWSearchEngine/hashtable.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o hashtable.o ../TWSearchEngine/hashtable.cpp
+
+queryprocessor.o: ../TWSearchEngine/queryprocessor.cpp ../TWSearchEngine/queryprocessor.h \
+		../TWSearchEngine/documentparser.h \
+		../TWSearchEngine/avl_tree.h \
+		../TWSearchEngine/hashtable.h \
+		../TWSearchEngine/stemandstopremoval.h \
+		../TWSearchEngine/index.h \
+		../TWSearchEngine/porter2_stemmer.h \
+		../TWSearchEngine/string_view.h \
+		../TWSearchEngine/hash.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o queryprocessor.o ../TWSearchEngine/queryprocessor.cpp
+
+userinterface.o: ../TWSearchEngine/userinterface.cpp ../TWSearchEngine/userinterface.h \
+		../TWSearchEngine/documentparser.h \
+		../TWSearchEngine/avl_tree.h \
+		../TWSearchEngine/hashtable.h \
+		../TWSearchEngine/stemandstopremoval.h \
+		../TWSearchEngine/index.h \
+		../TWSearchEngine/porter2_stemmer.h \
+		../TWSearchEngine/string_view.h \
+		../TWSearchEngine/hash.h \
+		../TWSearchEngine/queryprocessor.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o userinterface.o ../TWSearchEngine/userinterface.cpp
 
 ####### Install
 
