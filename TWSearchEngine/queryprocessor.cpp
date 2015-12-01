@@ -2,12 +2,14 @@
 
 QueryProcessor::QueryProcessor()
 {
-
+    booleanCommands[0] = "AND";
+    booleanCommands[1] = "OR";
+    booleanCommands[2] = "NOT";
 }
 
 bool QueryProcessor::isCommand(std::string command)
 {
-    /*
+    //WHY ARE THE STRINGS NOT EQUAL?!?!?!?
     for(int i = 0; i < 3; i++)
     {
         int stringDif = command.compare(booleanCommands[i]);
@@ -16,7 +18,7 @@ bool QueryProcessor::isCommand(std::string command)
             return true;
         }
     }
-    */
+    //the solution we used since the code block above made too much sense
     if(command.compare("AND") == 0 || command.compare("OR") == 0 || command.compare("NOT") == 0)
         return true;
     else
