@@ -30,6 +30,7 @@ public:
     std::map<int,int> ANDnot(std::vector<int>*, std::vector<int>*);
     std::vector<int> NOTand(std::map<int, int> , std::vector<int>*);
     std::vector<int> rank(std::map<int, int>);
+    void PrintSearchResults(std::vector<int> finalVector, DocumentParser *docParser);
 private:
     std::string booleanCommands[3];
     std::vector<int> finalVector;

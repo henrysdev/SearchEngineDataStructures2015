@@ -7,7 +7,7 @@
 #include <iostream>
 #include <functional>
 
-using namespace std;
+#include <avl_tree.h>
 
 
 class HashTable
@@ -15,14 +15,18 @@ class HashTable
 public:
     HashTable();
     void createHashTable();
-    void createPair(string, vector<int>);
-    long hash(string);
-
+    //void createPair(std::string, std::vector<int>);
+    void insert(const std::string & term,const int ID);
+    long hash(std::string);
+    AVL_Tree * getBucket(int keyValue);
 
 private:
     int buckets;
-    pair<string, vector<int>> indexHashTable[];
-    pair <string, vector<int>> wordAndPages;
+    //pair<string, vector<int>> indexHashTable[];
+    //pair <string, vector<int>> wordAndPages;
+    AVL_Tree ** indexHashTable;
+    std::string element;
+    std::vector<int>logCount;
 
 };
 

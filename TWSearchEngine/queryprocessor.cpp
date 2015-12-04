@@ -420,12 +420,7 @@ void QueryProcessor::query(DocumentParser* docParser)
                 occurrences[i]++;
 
             finalVector = rank(occurrences);
-
-            std::cout<<"appears on page(s): "<<std::endl;
-            for(int i = 0; i < finalVector.size(); i++)
-            {
-                std::cout<<finalVector[i]<<std::endl;
-            }
+            PrintSearchResults(finalVector,docParser);
 
             finishedQuery = true;
         }
@@ -471,11 +466,7 @@ void QueryProcessor::query(DocumentParser* docParser)
                 }
             }
 
-            std::cout<<"appears on page(s): "<<std::endl;
-            for(int i = 0; i < finalVector.size(); i++)
-            {
-                std::cout<<finalVector[i]<<std::endl;
-            }
+            PrintSearchResults(finalVector,docParser);
 
             finishedQuery = true;
         }
@@ -516,12 +507,7 @@ void QueryProcessor::query(DocumentParser* docParser)
                     }
                 }
             }
-
-            std::cout<<"appears on page(s): "<<std::endl;
-            for(int i = 0; i < finalVector.size(); i++)
-            {
-                std::cout<<finalVector[i]<<std::endl;
-            }
+            PrintSearchResults(finalVector,docParser);
 
             finishedQuery = true;
 
@@ -566,11 +552,7 @@ void QueryProcessor::query(DocumentParser* docParser)
                 }
             }
 
-            std::cout<<"appears on page(s): "<<std::endl;
-            for(int i = 0; i < finalVector.size(); i++)
-            {
-                std::cout<<finalVector[i]<<std::endl;
-            }
+            PrintSearchResults(finalVector,docParser);
 
             finishedQuery = true;
 
@@ -581,12 +563,13 @@ void QueryProcessor::query(DocumentParser* docParser)
         while(browsingResults == true)
         {
             int choice;
-            std::cout<<"[1 = BROWSE RESULTS] [2 = NEW SEARCH] [3 = HOME]"<<std::endl;
-            std::cout<<"CHOICE: ";
+            std::cout<<"Enter [1] for BROWSE RESULTS"<<std::endl;
+            std::cout<<"Enter [2] for NEW SEARCH"<<std::endl;
+            std::cout<<"Enter [3] for HOME"<<std::endl;
             std::cin>>choice;/*
             if(visitNum > 0)
             {
-                std::cout<<"[1 = BROWSE RESULTS] [2 = NEW SEARCH] [3 = HOME]"<<std::endl;
+                std::cout<<"[1 = BROWSE RESULTS] [2 = NEW SEARCH] [3 = INTERACTIVE MENU]"<<std::endl;
                 std::cout<<"CHOICE: ";
                 std::cin>>choice;
             }
@@ -598,6 +581,7 @@ void QueryProcessor::query(DocumentParser* docParser)
             switch(choice)
             {
                 default:
+            {
 //                    std::cout<<"'"<<userInput<<"' APPEARS ON PAGES: "<<std::endl;
 //                    for(int i = 0; i < finalVector.size(); i++)
 //                    {
@@ -607,20 +591,14 @@ void QueryProcessor::query(DocumentParser* docParser)
                     std::cout<<"RESULT ID TO BROWSE: ";
                     int entryNum;
                     std::cin>>entryNum;
-                    try
-                    {
-                        std::vector<int>::iterator pageID = std::find(finalVector.begin(), finalVector.end(),entryNum);
-                        std::cout<<"++++++++++++++++++++++++++++++++++++++++++++++++++++"<<std::endl;
-                        std::cout<<"++++++++++++++++++++++++++++++++++++++++++++++++++++"<<std::endl;
-                        std::cout<<docParser->retrievePage(pageID.base()[0])<<std::endl;
-                        std::cout<<"++++++++++++++++++++++++++++++++++++++++++++++++++++"<<std::endl;
-                        std::cout<<"++++++++++++++++++++++++++++++++++++++++++++++++++++"<<std::endl;
-                    }
-                    catch(exception e)
-                    {
-
-                    }
+                    std::vector<int>::iterator pageID = std::find(finalVector.begin(), finalVector.end(),entryNum);
+                    std::cout<<"++++++++++++++++++++++++++++++++++++++++++++++++++++"<<std::endl;
+                    std::cout<<"++++++++++++++++++++++++++++++++++++++++++++++++++++"<<std::endl;
+                    std::cout<<docParser->retrievePage(pageID.base()[0])<<std::endl;
+                    std::cout<<"++++++++++++++++++++++++++++++++++++++++++++++++++++"<<std::endl;
+                    std::cout<<"++++++++++++++++++++++++++++++++++++++++++++++++++++"<<std::endl;
                     break;
+            }
                 case 2:
                     query(docParser);
                     //WordSearch(docParser);
@@ -639,14 +617,18 @@ void QueryProcessor::query(DocumentParser* docParser)
 
 std::vector<int> QueryProcessor::rank(std::map<int, int> map)
 {
+    DocumentParser * docParser = new DocumentParser;
+    std::string fileName = "NULL";
+    std::ifstream inputStream;
+    std::string buffer = "NULL";
     double freq = 0.0;
     double docTerms = 1000.0;
     double TF = 0.0;
     double t;
     double docs = 235972.0;
     double numWordsappears = map.size();
-    double IDF;
     double TFIDF;
+    double IDF;
     std::vector<int> rankedvector;
     std::map<int, double> IDFmap;
     int docID = 0;
@@ -654,15 +636,24 @@ std::vector<int> QueryProcessor::rank(std::map<int, int> map)
     //go into where the word appears and then calculate how many words are in the vector
     for(auto & keyvalue : map)
     {
-        freq = keyvalue.second;
-        //caluclate doc terms by going in through ID
+        fileName = docParser -> getFileName(keyvalue.first);
+        inputStream.open(fileName);
+        int numWordsInDoc = 1;
+        while(inputStream >> buffer)
+        {
+            numWordsInDoc++;
+            buffer = "";
+        }
 
+        docTerms = numWordsInDoc;
+        inputStream.close();
+
+        freq = keyvalue.second;
 
         TF = freq/ docTerms;
         t = docs/numWordsappears;
         IDF = log(t);
         TFIDF = TF * IDF;
-
         IDFmap.insert(std::make_pair(keyvalue.first, TFIDF));
     }
     for(int i =0; i < 15; i++)
@@ -685,4 +676,25 @@ std::vector<int> QueryProcessor::rank(std::map<int, int> map)
         }
     }
     return rankedvector;
+}
+
+
+void QueryProcessor::PrintSearchResults(std::vector<int> finalVector, DocumentParser * docParser)
+{
+    std::cout<<"SEARCH RESULTS: "<<std::endl;
+    std::cout<<"-------------------------------------------------------------------------------"<<std::endl;
+    for(int i = 0; i < finalVector.size(); i++)
+    {
+        if(i < 15)
+        {
+            std::cout<<"["<<finalVector[i]<<"] "<<docParser->retrieveAttribute(finalVector[i],0)<<" | ";
+            std::cout<<docParser->retrieveAttribute(finalVector[i],1)<<" | ";
+            std::cout<<docParser->retrieveAttribute(finalVector[i],2)<<" | ";
+            //std::cout<<TFIDF_save<<std::endl;
+            std::cout<<std::endl;
+            std::cout<<"-------------------------------------------------------------------------------"<<std::endl;
+        }
+        else
+            break;
+    }
 }

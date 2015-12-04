@@ -19,10 +19,12 @@ public:
     int getDataStructureID();
     void incrementPageCount();
     void incrementWordCount();
+    void ClearIndex();
     int getPageCount();
     int getWordCount();
     AVL_Tree *& getMasterTree();
     HashTable *&getMasterHash();
+    std::vector<int>errorVec;
     std::vector<int> * findWord(std::string wordToFind);
     std::vector<std::pair<std::string,int>> * sortByFrequency(std::vector<std::pair<std::string,int>> * frequencyVector);
 };

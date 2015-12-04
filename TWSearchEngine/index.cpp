@@ -14,6 +14,7 @@ Index::Index(int i)
         masterAVL = new AVL_Tree();
     else
         masterHash = new HashTable();
+    errorVec.push_back(0);
 }
 
 AVL_Tree *& Index::getMasterTree()
@@ -32,21 +33,23 @@ std::vector<int> * Index::findWord(std::string wordToFind)
     if(dataStructure == 0)
     {
         if(masterAVL->GetNode(wordToFind) != nullptr)
-        //if(masterAVL->GetNode(wordToFind)->logCount.empty() == false)
             return &masterAVL->GetNode(wordToFind)->logCount;
         else
         {
-            return nullptr;
-            /*
-            std::vector<int> * newVector;
-            newVector->push_back(-1);
-            return newVector;
-            */
+            return &errorVec;
         }
     }
     else
     {
-        std::cout<<"hash table fail"<<std::endl;
+        int key = masterHash->hash(wordToFind);
+        if(masterHash->getBucket(key) != nullptr)
+        {
+            return &masterHash->getBucket(key)->GetNode(wordToFind)->logCount;
+        }
+        else
+        {
+            return &errorVec;
+        }
     }
 }
 
@@ -60,6 +63,14 @@ std::vector<std::pair<std::string,int>> * Index::sortByFrequency(std::vector<std
     };
     std::sort(freqVector->begin(), freqVector->end(), sort_pred());
     return freqVector;
+}
+
+void Index::ClearIndex()
+{
+    masterAVL = nullptr;
+    masterHash = nullptr;
+    masterAVL = new AVL_Tree;
+    masterHash = new HashTable;
 }
 
 int Index::getDataStructureID()

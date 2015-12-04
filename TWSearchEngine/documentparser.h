@@ -21,10 +21,12 @@ public:
     DocumentParser();
     StemAndStopRemoval * getStemmer();
     void Parse();
-    void ReadInXML(char* fileName);
+    void ReadInXML(std::string fileName);
     void ParsePage(std::string text, int pageID);
     Index * GetIndex();
     std::string retrievePage(int targetID);
+    std::string retrieveAttribute(int targetID, int attributeID);
+    std::string getFileName(int);
     void renamePageFiles();
 };
 

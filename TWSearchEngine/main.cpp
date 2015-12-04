@@ -11,11 +11,10 @@
 
 int main(int argc, char* argv[])
 {
-    std::cout<<"PARSING AND INDEXING..."<<std::endl;
     DocumentParser * docParser = new DocumentParser;
     UserInterface * userInterface = new UserInterface;
-    char* filename = argv[1];
-    docParser->ReadInXML(filename);
+    //std::string filename = "WikiDumpPart9.xml";
+    //docParser->ReadInXML(filename);
     userInterface->mainMenu(docParser);
     //docParser->renamePageFiles();
     return 0;
