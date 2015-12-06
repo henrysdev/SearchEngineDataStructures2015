@@ -6,7 +6,7 @@
 #include <string>
 #include <iostream>
 #include <functional>
-
+#include <iomanip>
 #include <avl_tree.h>
 
 
@@ -19,14 +19,15 @@ public:
     void insert(const std::string & term,const int ID);
     long hash(std::string);
     AVL_Tree * getBucket(int keyValue);
+    void hashToFrequencyVector();
+    std::vector<std::pair<std::string,int>> * GetFreqVector();
 
 private:
     int buckets;
     //pair<string, vector<int>> indexHashTable[];
     //pair <string, vector<int>> wordAndPages;
+    std::vector<std::pair<std::string,int>> frequencyVector;
     AVL_Tree ** indexHashTable;
-    std::string element;
-    std::vector<int>logCount;
 
 };
 

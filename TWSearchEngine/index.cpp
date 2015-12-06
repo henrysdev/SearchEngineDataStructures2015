@@ -1,19 +1,21 @@
 #include "index.h"
 #include "avl_tree.h"
 #include "hashtable.h"
+#include <ostream>
+#include <fstream>
 #include <vector>
 #include <algorithm>
+#include <sstream>
 #include <string>
 
 Index::Index(int i)
 {
+    //masterVector.reserve(99999999);
     dataStructure = i;
     totalPageCount = 0;
     totalWordCount = 0;
-    if(i == 0)
-        masterAVL = new AVL_Tree();
-    else
-        masterHash = new HashTable();
+    masterAVL = new AVL_Tree();
+    masterHash = new HashTable();
     errorVec.push_back(0);
 }
 
@@ -71,6 +73,105 @@ void Index::ClearIndex()
     masterHash = nullptr;
     masterAVL = new AVL_Tree;
     masterHash = new HashTable;
+}
+
+void Index::insertItem(std::string term, int pageID)
+{
+    masterDeque.push_back(std::make_pair(term,pageID));
+
+    if(totalWordCount%1000000 == 0)
+    {
+        std::cout<<"chunk appended"<<std::endl;
+        writeIndexToDisc();
+    }
+
+}
+
+void Index::writeIndexToDisc()
+{
+    std::ofstream saveFile ("persisted_index.txt", std::ofstream::out | std::ofstream::app);
+    for(int i = 0; i < masterDeque.size(); i++)
+    {
+        saveFile << masterDeque.at(i).first << " " << masterDeque.at(i).second<<std::endl;
+    }
+    masterDeque.clear();
+}
+
+void Index::writeStatsToDisc()
+{
+
+    std::ifstream origFile("persisted_stats.txt");
+    int origPageCount;
+    int origWordCount;
+    std::string line;
+    if (origFile.is_open())
+    {
+        getline(origFile,line);
+        origPageCount = std::stoi(line);
+        getline(origFile,line);
+        origWordCount = std::stoi(line);
+        origFile.close();
+    }
+    totalPageCount += origPageCount;
+    totalWordCount += origWordCount;
+    std::ofstream saveFile ("persisted_stats.txt");
+    saveFile << totalPageCount <<std::endl;
+    saveFile << totalWordCount <<std::endl;
+}
+
+void Index::readInStatsFile()
+{
+    std::string line;
+    std::ifstream saveFile ("persisted_stats.txt");
+    if (saveFile.is_open())
+    {
+        getline(saveFile,line);
+        totalPageCount = std::stoi(line);
+        getline(saveFile,line);
+        totalWordCount = std::stoi(line);
+        saveFile.close();
+    }
+}
+
+void Index::readInSaveFile(int structureID)
+{
+    std::cout<<"LOADING DATA..."<<std::endl;
+    dataStructure = structureID;
+    std::string line;
+    std::ifstream saveFile ("persisted_index.txt");
+    if (saveFile.is_open())
+    {
+        while ( getline (saveFile,line) )
+        {
+            std::string buf;
+            std::stringstream fullLine(line);
+            int iterator = 0;
+            std::string term;
+            int pageID;
+            while(fullLine >> buf)
+            {
+                if(iterator == 0)
+                    term = buf;
+                else
+                    pageID = std::stoi(buf);
+                iterator++;
+            }
+            if(dataStructure == 0)
+            {
+                masterAVL->Insert(term,pageID);
+            }
+            else
+            {
+                masterHash->insert(term,pageID);
+            }
+        }
+        saveFile.close();
+    }
+    readInStatsFile();
+    if(dataStructure == 0)
+        masterAVL->TreeToFrequencyVector();
+    else
+        masterHash->hashToFrequencyVector();
 }
 
 int Index::getDataStructureID()

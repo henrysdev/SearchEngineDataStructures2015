@@ -23,17 +23,18 @@ public:
     QueryProcessor();
     void query(DocumentParser* docParser);
     bool isCommand(std::string);
-    std::vector<int> AND(std::vector<int>*, std::vector<int>*);
-    std::vector<int> OR(std::vector<int>*, std::vector<int>*);
-    std::vector<int> NOT(std::vector<int>*, std::vector<int>*);
-    std::vector<int> AND2(std::vector<int>*, std::vector<int>*, std::vector<int>*);
+    std::vector<std::pair<int, double> > AND(std::vector<int>*, std::vector<int>*);
+    std::vector<std::pair<int, double> > OR(std::vector<int>*, std::vector<int>*);
+    std::vector<std::pair<int, double> > NOT(std::vector<int>*, std::vector<int>*);
+    std::vector<std::pair<int, double> > AND2(std::vector<int>*, std::vector<int>*, std::vector<int>*);
     std::map<int,int> ANDnot(std::vector<int>*, std::vector<int>*);
-    std::vector<int> NOTand(std::map<int, int> , std::vector<int>*);
-    std::vector<int> rank(std::map<int, int>);
-    void PrintSearchResults(std::vector<int> finalVector, DocumentParser *docParser);
+    std::vector<std::pair<int, double> > NOTand(std::map<int, int> , std::vector<int>*);
+    std::vector<std::pair<int, double> > rank(std::map<int, int>);
+    void PrintSearchResults(std::vector<std::pair<int, double>> finalVector, DocumentParser *docParser);
 private:
     std::string booleanCommands[3];
     std::vector<int> finalVector;
+    std::map<int, double> printIDFmap;
    // std::vector<int>* final;
 
 };

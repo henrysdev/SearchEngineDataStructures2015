@@ -13,10 +13,11 @@ int main(int argc, char* argv[])
 {
     DocumentParser * docParser = new DocumentParser;
     UserInterface * userInterface = new UserInterface;
+    //docParser->renamePageFiles();
     //std::string filename = "WikiDumpPart9.xml";
     //docParser->ReadInXML(filename);
     userInterface->mainMenu(docParser);
-    //docParser->renamePageFiles();
+    //
     return 0;
 }
 

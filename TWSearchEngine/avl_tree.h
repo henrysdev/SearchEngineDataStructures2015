@@ -4,6 +4,10 @@
 #include <string>
 #include <vector>
 #include <utility>
+#include <iostream>
+#include <vector>
+#include <utility>
+#include <string>
 
 class AVL_Tree
 {

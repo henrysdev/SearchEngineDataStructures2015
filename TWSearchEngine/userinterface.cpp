@@ -3,6 +3,7 @@
 
 UserInterface::UserInterface()
 {
+    hasLoaded = false;
     userInput = "NULL";
 }
 
@@ -34,11 +35,17 @@ void UserInterface::interactiveMode(DocumentParser * docParser)
 {
     while(true)
     {
+        std::cout<<"______________________________________________"<<std::endl;
+        std::cout<<"Welcome to INTERACTIVE mode"<<std::endl;
+        if(hasLoaded == false)
+            std::cout<<"***WARNING*** DATA HAS NOT BEEN LOADED!"<<std::endl;
         std::cout<<"Enter [1] for WORD SEARCH"<<std::endl;
         std::cout<<"Enter [2] for TOP 50 WORDS"<<std::endl;
         std::cout<<"Enter [3] for PAGE COUNT"<<std::endl;
         std::cout<<"Enter [4] for WORD COUNT"<<std::endl;
-        std::cout<<"Enter [5] for MAIN MENU"<<std::endl;
+        std::cout<<"Enter [5] to LOAD DATA INTO AVL TREE"<<std::endl;
+        std::cout<<"Enter [6] to LOAD DATA INTO HASH TABLE"<<std::endl;
+        std::cout<<"Enter [7] for MAIN MENU"<<std::endl;
         //std::cout<<"CHOICE: ";
         int user_choice;
         std::cin>>user_choice;
@@ -56,6 +63,18 @@ void UserInterface::interactiveMode(DocumentParser * docParser)
             case 4:
                 WordCount(docParser);
                 break;
+            case 5:
+            {
+                docParser->GetIndex()->readInSaveFile(0);
+                hasLoaded = true;
+                break;
+            }
+            case 6:
+            {
+                docParser->GetIndex()->readInSaveFile(1);
+                hasLoaded = true;
+                break;
+            }
             default:
                 mainMenu(docParser);
                 break;
@@ -104,12 +123,25 @@ void UserInterface::exit()
 void UserInterface::PrintTopWords(DocumentParser * docParser)
 {
     Index * index = docParser->GetIndex();
-    std::vector<std::pair<std::string,int>> * freqList = index->sortByFrequency(index->getMasterTree()->GetFreqVector());
-    for(int i = 0; i < 50; i++)
+    std::vector<std::pair<std::string,int>> * freqList;
+    if(index->getDataStructureID() == 0)
     {
-        std::cout<<"#"<<i+1<<". "<<freqList->at(freqList->size()-i-1).first<<", "<<freqList->at(freqList->size()-i-1).second<<std::endl;
+        freqList = index->sortByFrequency(index->getMasterTree()->GetFreqVector());
+        for(int i = 0; i < 50; i++)
+        {
+            std::cout<<"#"<<i+1<<". "<<freqList->at(freqList->size()-i-1).first<<", "<<freqList->at(freqList->size()-i-1).second<<std::endl;
+        }
+        std::cout<<std::endl;
     }
-    std::cout<<std::endl;
+    else
+    {
+        freqList = index->sortByFrequency(index->getMasterHash()->GetFreqVector());
+        for(int i = 0; i < 50; i++)
+        {
+            std::cout<<"#"<<i+1<<". "<<freqList->at(freqList->size()-i-1).first<<", "<<freqList->at(freqList->size()-i-1).second<<std::endl;
+        }
+        std::cout<<std::endl;
+    }
 }
 
 void UserInterface::WordSearch(DocumentParser * docParser)

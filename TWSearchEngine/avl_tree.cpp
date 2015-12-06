@@ -1,8 +1,5 @@
 #include "avl_tree.h"
-#include <iostream>
-#include <vector>
-#include <utility>
-#include <string>
+
 
 AVL_Tree::AVL_Node::AVL_Node()
 {

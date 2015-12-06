@@ -26,6 +26,7 @@ public:
 
 
 private:
+    bool hasLoaded;
     std::string userInput;
     QueryProcessor * queryProcessor;
 };

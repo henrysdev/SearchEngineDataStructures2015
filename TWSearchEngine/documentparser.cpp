@@ -15,7 +15,7 @@ DocumentParser::DocumentParser()
 {
     xmlName = "";
     stemStopRemoval = new StemAndStopRemoval();
-    index = new Index(1);
+    index = new Index(0);
 }
 
 void DocumentParser::ReadInXML(std::string fileName)
@@ -52,7 +52,15 @@ void DocumentParser::Parse()
             pageID = std::stoi(currentPageNode->first_node("id")->value());
         }
     }
-    //index->getMasterTree()->TreeToFrequencyVector();
+    /*
+    if(index->getDataStructureID() == 0)
+        index->getMasterTree()->TreeToFrequencyVector();
+    else
+        index->getMasterHash()->hashToFrequencyVector();
+    */
+    std::cout<<"parsed it, now just writing to disc"<<std::endl;
+    index->writeIndexToDisc();
+    index->writeStatsToDisc();
     std::cout<<"DONE with "<<pageCount<<" page"<<std::endl;
 }
 
@@ -78,10 +86,13 @@ void DocumentParser::ParsePage(std::string text, int pageID)
                     stemStopRemoval->StemWord(buf);
                     //std::cout<<", after stem: "<<buf<<std::endl;
                     index->incrementWordCount();
+                    index->insertItem(buf,pageID);
+                    /*
                     if(index->getDataStructureID() == 0)
                         index->getMasterTree()->Insert(buf,pageID);
                     else
                         index->getMasterHash()->insert(buf,pageID);
+                    */
                 }
             }
         }
@@ -173,7 +184,7 @@ std::string DocumentParser::retrieveAttribute(int targetID, int attributeID)
 
 void DocumentParser::renamePageFiles()
 {
-    for(int i = 1; i < 235960; i++)
+    for(int i = 1; i < 235973; i++)
     {
         std::string filePath = "WikiDump/WikiDumpPart";
         std::stringstream ss;

@@ -10,6 +10,7 @@ QueryProcessor::QueryProcessor()
 bool QueryProcessor::isCommand(std::string command)
 {
     //WHY ARE THE STRINGS NOT EQUAL?!?!?!?
+    /*
     for(int i = 0; i < 3; i++)
     {
         int stringDif = command.compare(booleanCommands[i]);
@@ -18,6 +19,7 @@ bool QueryProcessor::isCommand(std::string command)
             return true;
         }
     }
+    */
     //the solution we used since the code block above made too much sense
     if(command.compare("AND") == 0 || command.compare("OR") == 0 || command.compare("NOT") == 0)
         return true;
@@ -43,7 +45,7 @@ bool QueryProcessor::isCommand(std::string command)
 //    return final;
 //}
 
-std::vector<int> QueryProcessor::AND(std::vector<int>* ref1, std::vector<int>* ref2)
+std::vector<std::pair<int, double>> QueryProcessor::AND(std::vector<int>* ref1, std::vector<int>* ref2)
 {
     std::vector<int> refx;
     std::vector<int> refy;
@@ -89,7 +91,7 @@ std::vector<int> QueryProcessor::AND(std::vector<int>* ref1, std::vector<int>* r
 //    return final;
 }
 
-std::vector<int> QueryProcessor::AND2(std::vector<int>* ref1, std::vector<int>* ref2, std::vector<int>* ref3)
+std::vector<std::pair<int, double>> QueryProcessor::AND2(std::vector<int>* ref1, std::vector<int>* ref2, std::vector<int>* ref3)
 {
     std::vector<int> almostfinal;
     std::vector<int> final;
@@ -175,7 +177,7 @@ std::vector<int> QueryProcessor::AND2(std::vector<int>* ref1, std::vector<int>* 
 //    return final;
 //}
 
-std::vector<int> QueryProcessor::OR(std::vector<int>* ref1, std::vector<int>* ref2)
+std::vector<std::pair<int, double>> QueryProcessor::OR(std::vector<int>* ref1, std::vector<int>* ref2)
 {
     std::vector<int> refx;
     std::vector<int> refy;
@@ -221,7 +223,7 @@ std::vector<int> QueryProcessor::OR(std::vector<int>* ref1, std::vector<int>* re
 }
 
 
-std::vector<int> QueryProcessor::NOT(std::vector<int>* ref1, std::vector<int>* ref2)
+std::vector<std::pair<int, double>> QueryProcessor::NOT(std::vector<int>* ref1, std::vector<int>* ref2)
 {
     std::vector<int> refx;
     std::vector<int> refy;
@@ -267,28 +269,6 @@ std::vector<int> QueryProcessor::NOT(std::vector<int>* ref1, std::vector<int>* r
 //    return final;
 }
 
-//std::vector<int> QueryProcessor::NOT(std::vector<int>* ref1, std::vector<int>* ref2)
-//{
-//    std::vector<int> final;
-//    for(int i = 0; i < ref1->size()-1; i++)
-//    {
-//        final.push_back(ref1->at(i));
-//    }
-//    for(int i = 0; i < final.size()-1; i++)
-//    {
-//        for(int j = 0; j < ref2->size()-1; j++)
-//        {
-//            if(final[i] == ref2->at(j))
-//            {
-//                std::cout<<"we want to delete: " << final[i] << std::endl;
-//            }
-
-//        }
-//    }
-
-//    return final;
-//}
-
 std::map<int,int> QueryProcessor::ANDnot(std::vector<int>* ref1, std::vector<int>* ref2)
 {
     std::vector<int> refx;
@@ -323,19 +303,9 @@ std::map<int,int> QueryProcessor::ANDnot(std::vector<int>* ref1, std::vector<int
     }
 
     return andmap;
-
-//    return rank(finalmap);
-
-//    std::vector<int> final;
-//    sort(ref1->begin(), ref1->end());
-//    sort(ref2->begin(), ref2->end());
-
-//    std::set_intersection(ref1->begin(),ref1->end(), ref2->begin(), ref2->end(), std::back_inserter(final));
-
-//    return final;
 }
 
-std::vector<int> QueryProcessor::NOTand(std::map<int,int> andmap, std::vector<int>* ref3)
+std::vector<std::pair<int, double>> QueryProcessor::NOTand(std::map<int,int> andmap, std::vector<int>* ref3)
 {
     std::vector<int> refz;
 
@@ -361,16 +331,6 @@ std::vector<int> QueryProcessor::NOTand(std::map<int,int> andmap, std::vector<in
     }
 
     return rank(andmap);
-
-//    std::vector<int> final;
-//    std::sort(and1.begin(), and1.end());
-//    std::sort(ref3->begin(), ref3->end());
-//    std::unique(and1.begin(), and1.end());
-//    std::unique(ref3->begin(), ref3->end());
-
-//    std::set_difference(and1.begin(),and1.end(), ref3->begin(), ref3->end(), std::back_inserter(final));
-
-//    return final;
 }
 
 
@@ -392,7 +352,7 @@ void QueryProcessor::query(DocumentParser* docParser)
         std::vector<int>* wordReferences2;
         std::vector<int>* wordReferences3;
         std::map<int, int> andMap;
-        std::vector<int> finalVector;
+        std::vector<std::pair<int, double>> finalVector;
         while(stream >> temp)
         {
             words.push_back(temp);
@@ -591,7 +551,12 @@ void QueryProcessor::query(DocumentParser* docParser)
                     std::cout<<"RESULT ID TO BROWSE: ";
                     int entryNum;
                     std::cin>>entryNum;
-                    std::vector<int>::iterator pageID = std::find(finalVector.begin(), finalVector.end(),entryNum);
+                    std::vector<int> recieveVector;
+                    for(int i = 0; i< finalVector.size(); i++)
+                    {
+                        recieveVector.push_back(finalVector[i].first);
+                    }
+                    std::vector<int>::iterator pageID = std::find(recieveVector.begin(), recieveVector.end(), entryNum);
                     std::cout<<"++++++++++++++++++++++++++++++++++++++++++++++++++++"<<std::endl;
                     std::cout<<"++++++++++++++++++++++++++++++++++++++++++++++++++++"<<std::endl;
                     std::cout<<docParser->retrievePage(pageID.base()[0])<<std::endl;
@@ -615,14 +580,14 @@ void QueryProcessor::query(DocumentParser* docParser)
 
 }
 
-std::vector<int> QueryProcessor::rank(std::map<int, int> map)
+std::vector<std::pair<int, double>> QueryProcessor::rank(std::map<int, int> map)
 {
     DocumentParser * docParser = new DocumentParser;
     std::string fileName = "NULL";
     std::ifstream inputStream;
     std::string buffer = "NULL";
     double freq = 0.0;
-    double docTerms = 1000.0;
+    double docTerms = 0.0;
     double TF = 0.0;
     double t;
     double docs = 235972.0;
@@ -630,7 +595,9 @@ std::vector<int> QueryProcessor::rank(std::map<int, int> map)
     double TFIDF;
     double IDF;
     std::vector<int> rankedvector;
+    std::vector<std::pair<int, double>> rankedVector;
     std::map<int, double> IDFmap;
+    std::map<int, double> IDFmap2;
     int docID = 0;
 
     //go into where the word appears and then calculate how many words are in the vector
@@ -655,6 +622,7 @@ std::vector<int> QueryProcessor::rank(std::map<int, int> map)
         IDF = log(t);
         TFIDF = TF * IDF;
         IDFmap.insert(std::make_pair(keyvalue.first, TFIDF));
+        IDFmap2.insert(std::make_pair(keyvalue.first, TFIDF));
     }
     for(int i =0; i < 15; i++)
     {
@@ -675,11 +643,18 @@ std::vector<int> QueryProcessor::rank(std::map<int, int> map)
             break;
         }
     }
-    return rankedvector;
+
+    for(int i = 0; i < rankedvector.size(); i++)
+    {
+        rankedVector.push_back(std::make_pair(rankedvector[i], IDFmap2.find(rankedvector[i])->second));
+    }
+
+    return rankedVector;
+
 }
 
 
-void QueryProcessor::PrintSearchResults(std::vector<int> finalVector, DocumentParser * docParser)
+void QueryProcessor::PrintSearchResults(std::vector<std::pair<int, double>>finalVector, DocumentParser * docParser)
 {
     std::cout<<"SEARCH RESULTS: "<<std::endl;
     std::cout<<"-------------------------------------------------------------------------------"<<std::endl;
@@ -687,10 +662,10 @@ void QueryProcessor::PrintSearchResults(std::vector<int> finalVector, DocumentPa
     {
         if(i < 15)
         {
-            std::cout<<"["<<finalVector[i]<<"] "<<docParser->retrieveAttribute(finalVector[i],0)<<" | ";
-            std::cout<<docParser->retrieveAttribute(finalVector[i],1)<<" | ";
-            std::cout<<docParser->retrieveAttribute(finalVector[i],2)<<" | ";
-            //std::cout<<TFIDF_save<<std::endl;
+            std::cout<<"["<<finalVector[i].first<<"] "<<docParser->retrieveAttribute(finalVector[i].first,0)<<" | ";
+            std::cout<<docParser->retrieveAttribute(finalVector[i].first,1)<<" | ";
+            std::cout<<docParser->retrieveAttribute(finalVector[i].first,2)<<" | ";
+            std::cout<<std::setprecision(5)<<finalVector[i].second;
             std::cout<<std::endl;
             std::cout<<"-------------------------------------------------------------------------------"<<std::endl;
         }
