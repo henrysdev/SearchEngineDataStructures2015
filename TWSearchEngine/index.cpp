@@ -73,6 +73,9 @@ void Index::ClearIndex()
     masterHash = nullptr;
     masterAVL = new AVL_Tree;
     masterHash = new HashTable;
+    std::ofstream clearFile("persisted_index.txt");
+    //clearFile.open();
+    clearFile.close();
 }
 
 void Index::insertItem(std::string term, int pageID)
@@ -99,21 +102,6 @@ void Index::writeIndexToDisc()
 
 void Index::writeStatsToDisc()
 {
-
-    std::ifstream origFile("persisted_stats.txt");
-    int origPageCount;
-    int origWordCount;
-    std::string line;
-    if (origFile.is_open())
-    {
-        getline(origFile,line);
-        origPageCount = std::stoi(line);
-        getline(origFile,line);
-        origWordCount = std::stoi(line);
-        origFile.close();
-    }
-    totalPageCount += origPageCount;
-    totalWordCount += origWordCount;
     std::ofstream saveFile ("persisted_stats.txt");
     saveFile << totalPageCount <<std::endl;
     saveFile << totalWordCount <<std::endl;
@@ -126,16 +114,17 @@ void Index::readInStatsFile()
     if (saveFile.is_open())
     {
         getline(saveFile,line);
-        totalPageCount = std::stoi(line);
+        totalPageCount += std::stoi(line);
         getline(saveFile,line);
-        totalWordCount = std::stoi(line);
+        totalWordCount += std::stoi(line);
         saveFile.close();
     }
 }
 
 void Index::readInSaveFile(int structureID)
 {
-    std::cout<<"LOADING DATA..."<<std::endl;
+    //ClearIndex();
+    std::cout<<"LOADING DATA INTO STRUCTURE..."<<std::endl;
     dataStructure = structureID;
     std::string line;
     std::ifstream saveFile ("persisted_index.txt");

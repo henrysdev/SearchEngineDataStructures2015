@@ -1,7 +1,8 @@
 #include "queryprocessor.h"
 
-QueryProcessor::QueryProcessor()
+QueryProcessor::QueryProcessor(DocumentParser * origParser)
 {
+    docParser = origParser;
     booleanCommands[0] = "AND";
     booleanCommands[1] = "OR";
     booleanCommands[2] = "NOT";
@@ -334,7 +335,7 @@ std::vector<std::pair<int, double>> QueryProcessor::NOTand(std::map<int,int> and
 }
 
 
-void QueryProcessor::query(DocumentParser* docParser)
+void QueryProcessor::query()
 {
     bool finishedQuery = false;
     while(finishedQuery != true)
@@ -380,7 +381,7 @@ void QueryProcessor::query(DocumentParser* docParser)
                 occurrences[i]++;
 
             finalVector = rank(occurrences);
-            PrintSearchResults(finalVector,docParser);
+            PrintSearchResults(finalVector);
 
             finishedQuery = true;
         }
@@ -426,7 +427,7 @@ void QueryProcessor::query(DocumentParser* docParser)
                 }
             }
 
-            PrintSearchResults(finalVector,docParser);
+            PrintSearchResults(finalVector);
 
             finishedQuery = true;
         }
@@ -467,7 +468,7 @@ void QueryProcessor::query(DocumentParser* docParser)
                     }
                 }
             }
-            PrintSearchResults(finalVector,docParser);
+            PrintSearchResults(finalVector);
 
             finishedQuery = true;
 
@@ -512,7 +513,7 @@ void QueryProcessor::query(DocumentParser* docParser)
                 }
             }
 
-            PrintSearchResults(finalVector,docParser);
+            PrintSearchResults(finalVector);
 
             finishedQuery = true;
 
@@ -565,7 +566,7 @@ void QueryProcessor::query(DocumentParser* docParser)
                     break;
             }
                 case 2:
-                    query(docParser);
+                    query();
                     //WordSearch(docParser);
                     browsingResults = false;
                     break;
@@ -582,7 +583,6 @@ void QueryProcessor::query(DocumentParser* docParser)
 
 std::vector<std::pair<int, double>> QueryProcessor::rank(std::map<int, int> map)
 {
-    DocumentParser * docParser = new DocumentParser;
     std::string fileName = "NULL";
     std::ifstream inputStream;
     std::string buffer = "NULL";
@@ -654,7 +654,7 @@ std::vector<std::pair<int, double>> QueryProcessor::rank(std::map<int, int> map)
 }
 
 
-void QueryProcessor::PrintSearchResults(std::vector<std::pair<int, double>>finalVector, DocumentParser * docParser)
+void QueryProcessor::PrintSearchResults(std::vector<std::pair<int, double>>finalVector)
 {
     std::cout<<"SEARCH RESULTS: "<<std::endl;
     std::cout<<"-------------------------------------------------------------------------------"<<std::endl;

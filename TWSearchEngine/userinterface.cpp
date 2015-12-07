@@ -1,13 +1,14 @@
 #include "userinterface.h"
 
 
-UserInterface::UserInterface()
+UserInterface::UserInterface(DocumentParser * docP)
 {
     hasLoaded = false;
     userInput = "NULL";
+    queryProcessor = new QueryProcessor(docP);
 }
 
-void UserInterface::mainMenu(DocumentParser * docParser)
+void UserInterface::mainMenu(DocumentParser & docParser)
 {
     std::cout<<"______________________________________________"<<std::endl;
     std::cout<<"Welcome to TWSearchEngine"<<std::endl;
@@ -17,11 +18,11 @@ void UserInterface::mainMenu(DocumentParser * docParser)
     std::cin>>userInput;
     if(userInput == "1")
     {
-        interactiveMode(docParser);
+        interactiveMode(&docParser);
     }
     else if(userInput == "2")
     {
-        maintenanceMode(docParser);
+        maintenanceMode(&docParser);
     }
     else if(userInput == "3")
     {
@@ -76,7 +77,7 @@ void UserInterface::interactiveMode(DocumentParser * docParser)
                 break;
             }
             default:
-                mainMenu(docParser);
+                mainMenu(*docParser);
                 break;
         }
     }
@@ -109,7 +110,7 @@ void UserInterface::maintenanceMode(DocumentParser * docParser)
                 break;
             default:
                 maintenance = false;
-                mainMenu(docParser);
+                mainMenu(*docParser);
                 break;
         }
     }
@@ -147,7 +148,7 @@ void UserInterface::PrintTopWords(DocumentParser * docParser)
 void UserInterface::WordSearch(DocumentParser * docParser)
 {
     Index * index = docParser->GetIndex();
-    queryProcessor->query(docParser);
+    queryProcessor->query();
 }
 
 void UserInterface::PageCount(DocumentParser * docParser)

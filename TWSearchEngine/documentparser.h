@@ -6,6 +6,7 @@
 #include <string>
 #include "avl_tree.h"
 #include "hashtable.h"
+#include <vector>
 #include "stemandstopremoval.h"
 #include "index.h"
 
@@ -16,6 +17,7 @@ private:
     std::ifstream xmlStream;
     std::string xmlName;
     StemAndStopRemoval * stemStopRemoval;
+    std::vector<std::string> additionalFileNames;
     Index * index;
 public:
     DocumentParser();

@@ -27,6 +27,7 @@ void DocumentParser::ReadInXML(std::string fileName)
 
 void DocumentParser::Parse()
 {
+    additionalFileNames.push_back(xmlName);
     std::cout<<"PARSING AND INDEXING..."<<std::endl;
     int x = 0;
     rapidxml::file<> xmlFile(xmlName.c_str());
@@ -61,7 +62,7 @@ void DocumentParser::Parse()
     std::cout<<"parsed it, now just writing to disc"<<std::endl;
     index->writeIndexToDisc();
     index->writeStatsToDisc();
-    std::cout<<"DONE with "<<pageCount<<" page"<<std::endl;
+    std::cout<<"DONE with "<<pageCount<<" page(s) and "<<index->getWordCount()<<" words"<<std::endl;
 }
 
 void DocumentParser::ParsePage(std::string text, int pageID)
@@ -120,18 +121,51 @@ std::string DocumentParser::retrievePage(int targetID)
     std::string s = ss.str();
     filePath.append(s);
     filePath += ".xml";
-    //std::cout<<"filepath: "<<filePath<<std::endl;
-    rapidxml::file<> xmlFile(filePath.c_str());
-    rapidxml::xml_document<> doc;
-    doc.parse<0>(xmlFile.data());
-    rapidxml::xml_node<>* firstNode = doc.first_node();
-    bool finishedParsingAllPages = false;
-    rapidxml::xml_node<>* currentPageNode = firstNode->first_node("page");
-    std::string title = currentPageNode->first_node("title")->value();
-    rapidxml::xml_node<>* firstTierNode = currentPageNode->first_node("revision");
-    std::string pageText = firstTierNode->first_node("text")->value();
-    int pageID = std::stoi(currentPageNode->first_node("id")->value());
+    std::string pageText;
+    std::ifstream infile(filePath);
+    if(infile.good())
+    {
+        rapidxml::file<> xmlFile(filePath.c_str());
+        rapidxml::xml_document<> doc;
+        doc.parse<0>(xmlFile.data());
+        rapidxml::xml_node<>* firstNode = doc.first_node();
+        bool finishedParsingAllPages = false;
+        rapidxml::xml_node<>* currentPageNode = firstNode->first_node("page");
+        std::string title = currentPageNode->first_node("title")->value();
+        rapidxml::xml_node<>* firstTierNode = currentPageNode->first_node("revision");
+        pageText = firstTierNode->first_node("text")->value();
+        int pageID = std::stoi(currentPageNode->first_node("id")->value());
+    }
+    else
+    {
+        for(int i = 0; i < additionalFileNames.size(); i++)
+        {
+            int x = 0;
+            rapidxml::file<> xmlFile(additionalFileNames[i].c_str());
+            rapidxml::xml_document<> doc;
+            doc.parse<0>(xmlFile.data());
+            rapidxml::xml_node<>* firstNode = doc.first_node();
+            bool finishedParsingAllPages = false;
+            rapidxml::xml_node<>* currentPageNode = firstNode->first_node("page");
+            rapidxml::xml_node<>* firstTierNode = currentPageNode->first_node("revision");
+            pageText = firstTierNode->first_node("text")->value();
+            int pageID = std::stoi(currentPageNode->first_node("id")->value());
+            while(finishedParsingAllPages == false)
+            {
+                if(currentPageNode->next_sibling() == nullptr)
+                    finishedParsingAllPages = true;
+                else
+                {
+                    currentPageNode = currentPageNode->next_sibling();
+                    firstTierNode = currentPageNode->first_node("revision");
+                    pageText = firstTierNode->first_node("text")->value();
+                    pageID = std::stoi(currentPageNode->first_node("id")->value());
+                }
+            }
+        }
+    }
     return pageText;
+
 }
 
 std::string DocumentParser::getFileName(int targetID)
@@ -142,7 +176,40 @@ std::string DocumentParser::getFileName(int targetID)
     std::string s = ss.str();
     filePath.append(s);
     filePath += ".xml";
-    return filePath;
+    std::ifstream infile(filePath);
+    if(infile.good())
+    {
+        return filePath;
+    }
+    else
+    {
+        for(int i = 0; i < additionalFileNames.size(); i++)
+        {
+            int x = 0;
+            rapidxml::file<> xmlFile(additionalFileNames[i].c_str());
+            rapidxml::xml_document<> doc;
+            doc.parse<0>(xmlFile.data());
+            rapidxml::xml_node<>* firstNode = doc.first_node();
+            bool finishedParsingAllPages = false;
+            rapidxml::xml_node<>* currentPageNode = firstNode->first_node("page");
+            int pageID = std::stoi(currentPageNode->first_node("id")->value());
+            if(pageID == targetID)
+                return additionalFileNames[i];
+            else
+            {
+                while(finishedParsingAllPages == false)
+                {
+                    if(currentPageNode->next_sibling() == nullptr)
+                        finishedParsingAllPages = true;
+                    else
+                    {
+                        currentPageNode = currentPageNode->next_sibling();
+                        pageID = std::stoi(currentPageNode->first_node("id")->value());
+                    }
+                }
+            }
+        }
+    }
 }
 
 std::string DocumentParser::retrieveAttribute(int targetID, int attributeID)
@@ -153,32 +220,87 @@ std::string DocumentParser::retrieveAttribute(int targetID, int attributeID)
     std::string s = ss.str();
     filePath.append(s);
     filePath += ".xml";
-    rapidxml::file<> xmlFile(filePath.c_str());
-    rapidxml::xml_document<> doc;
-    doc.parse<0>(xmlFile.data());
-    rapidxml::xml_node<>* firstNode = doc.first_node();
-    rapidxml::xml_node<>* currentPageNode = firstNode->first_node("page");
-    rapidxml::xml_node<>* revisionPageNode = currentPageNode->first_node("revision");
-    if(attributeID == 0)
+    std::ifstream infile(filePath);
+    if(infile.good())
     {
-        std::string title = currentPageNode->first_node("title")->value();
-        return title;
-    }
-    else if(attributeID == 1)
-    {
-        std::string timestamp = revisionPageNode->first_node("timestamp")->value();
-        return timestamp;
-    }
-    else if(attributeID == 2)
-    {
-        rapidxml::xml_node<>* contributorPageNode = revisionPageNode->first_node("contributor");
-        rapidxml::xml_node<>* usernamePageNode = contributorPageNode->first_node("username");
-        std::string username = "Unknown Author";
-        if(usernamePageNode != nullptr)
+        rapidxml::file<>xmlFile(filePath.c_str());
+        rapidxml::xml_document<> doc;
+        doc.parse<0>(xmlFile.data());
+        rapidxml::xml_node<>* firstNode = doc.first_node();
+        rapidxml::xml_node<>* currentPageNode = firstNode->first_node("page");
+        rapidxml::xml_node<>* revisionPageNode = currentPageNode->first_node("revision");
+        if(attributeID == 0)
         {
-            username = usernamePageNode->value();
+            std::string title = currentPageNode->first_node("title")->value();
+            return title;
         }
-        return username;
+        else if(attributeID == 1)
+        {
+            std::string timestamp = revisionPageNode->first_node("timestamp")->value();
+            return timestamp;
+        }
+        else if(attributeID == 2)
+        {
+            rapidxml::xml_node<>* contributorPageNode = revisionPageNode->first_node("contributor");
+            rapidxml::xml_node<>* usernamePageNode = contributorPageNode->first_node("username");
+            std::string username = "Unknown Author";
+            if(usernamePageNode != nullptr)
+            {
+                username = usernamePageNode->value();
+            }
+            return username;
+        }
+    }
+    else
+    {
+        for(int i = 0; i < additionalFileNames.size(); i++)
+        {
+            int x = 0;
+            rapidxml::file<> xmlFile(additionalFileNames[i].c_str());
+            rapidxml::xml_document<> doc;
+            doc.parse<0>(xmlFile.data());
+            rapidxml::xml_node<>* firstNode = doc.first_node();
+            bool finishedParsingAllPages = false;
+            rapidxml::xml_node<>* currentPageNode = firstNode->first_node("page");
+            rapidxml::xml_node<>* revisionPageNode = currentPageNode->first_node("revision");
+            int pageID = std::stoi(currentPageNode->first_node("id")->value());
+            if(attributeID == 0)
+            {
+                std::string title = currentPageNode->first_node("title")->value();
+                return title;
+            }
+            else if(attributeID == 1)
+            {
+                std::string timestamp = revisionPageNode->first_node("timestamp")->value();
+                return timestamp;
+            }
+            else if(attributeID == 2)
+            {
+                rapidxml::xml_node<>* contributorPageNode = revisionPageNode->first_node("contributor");
+                rapidxml::xml_node<>* usernamePageNode = contributorPageNode->first_node("username");
+                std::string username = "Unknown Author";
+                if(usernamePageNode != nullptr)
+                {
+                    username = usernamePageNode->value();
+                }
+                return username;
+            }
+            if(pageID == targetID)
+                return additionalFileNames[i];
+            else
+            {
+                while(finishedParsingAllPages == false)
+                {
+                    if(currentPageNode->next_sibling() == nullptr)
+                        finishedParsingAllPages = true;
+                    else
+                    {
+                        currentPageNode = currentPageNode->next_sibling();
+                        pageID = std::stoi(currentPageNode->first_node("id")->value());
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -192,7 +314,6 @@ void DocumentParser::renamePageFiles()
         std::string s = ss.str();
         filePath.append(s);
         filePath += ".xml";
-        //std::cout<<"filepath: "<<filePath<<std::endl;
         rapidxml::file<> xmlFile(filePath.c_str());
         rapidxml::xml_document<> doc;
         doc.parse<0>(xmlFile.data());

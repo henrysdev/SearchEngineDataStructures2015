@@ -14,8 +14,8 @@
 class UserInterface
 {
 public:
-    UserInterface();
-    void mainMenu(DocumentParser *docParser);
+    UserInterface(DocumentParser *docP);
+    void mainMenu(DocumentParser &docParser);
     void interactiveMode(DocumentParser *docParser);
     void maintenanceMode(DocumentParser *docParser);
     void WordSearch(DocumentParser *docParser);
